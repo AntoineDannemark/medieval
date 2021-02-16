@@ -1,0 +1,39 @@
+{
+  "compilerOptions": {  
+    "target": "es5",                          
+    "module": "esnext",                     
+    "lib": [
+        "DOM",
+        "DOM.Iterable",
+        "ESNext"
+    ],                             
+    "allowJs": true,                       
+    "jsx": "react-jsx",                     
+    "noEmit": true,
+    "removeComments": true,                
+    "downlevelIteration": true,            
+    "isolatedModules": true,              
+
+    /* Strict Type-Checking Options */
+    "strict": true,                           
+    // "strictPropertyInitialization": false,  /* Enable strict checking of property initialization in classes. */
+
+    /* Module Resolution Options */
+    "moduleResolution": "node",          
+    "resolveJsonModule": true, 
+    "allowSyntheticDefaultImports": true, 
+    "esModuleInterop": true,                  
+
+    /* Experimental Options */
+    "experimentalDecorators": true,        
+    "emitDecoratorMetadata": true,         
+
+    /* Advanced Options */
+    "skipLibCheck": true,                    
+    "forceConsistentCasingInFileNames": true,
+    "noFallthroughCasesInSwitch": true,
+  },
+  "include": [
+    "src"
+  ]
+}
