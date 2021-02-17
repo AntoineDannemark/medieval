@@ -5,7 +5,7 @@
   "homepage": ".",
   "private": true,
   "scripts": {
-    "start": "webpack serve --config config/webpack.config.js --env NODE_ENV=development",
+    "start": "cross-env NODE_ENV=development webpack serve --config config/webpack.config.js",
     "build-dev": "webpack --config config/webpack.config.js --env NODE_ENV=development",
     "build": "webpack --config config/webpack.config.js --env NODE_ENV=production",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -16,18 +16,23 @@
     "@babel/cli": "^7.12.16",
     "@babel/core": "^7.12.16",
     "@babel/preset-env": "^7.12.16",
-    "@babel/preset-react": "^7.12.13",
     "babel-loader": "^8.2.2",
+    "babel-plugin-named-asset-import": "^0.3.7",
+    "babel-preset-react-app": "^10.0.0",
+    "cross-env": "^7.0.3",
     "css-loader": "^5.0.2",
     "html-webpack-plugin": "^5.1.0",
     "mini-css-extract-plugin": "^1.3.7",
     "pnp-webpack-plugin": "^1.6.4",
     "style-loader": "^2.0.0",
+    "typescript": "^4.1.5",
     "webpack": "^5.22.0",
     "webpack-cli": "^4.5.0",
     "webpack-dev-server": "^3.11.2"
   },
   "babel": {
-    "extends": "./config/babel.config.js"
+    "presets": [
+      "react-app"
+    ]
   }
 }

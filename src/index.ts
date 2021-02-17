@@ -1,5 +1,5 @@
 import './index.css'
 
-export const log = () => console.log('prout');
+export const log = (param: string) => console.log('Logging: ' + param);
 
-log()
+log('proute')

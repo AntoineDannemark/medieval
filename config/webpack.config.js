@@ -5,6 +5,8 @@ const PnpWebpackPlugin = require('pnp-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 
+const shouldUseSourceMap = process.env.GENERATE_SOURCEMAP !== 'false';
+
 // style files regexes
 const cssRegex = /\.css$/;
 const cssModuleRegex = /\.module\.css$/;
@@ -12,8 +14,13 @@ const sassRegex = /\.(scss|sass)$/;
 const sassModuleRegex = /\.module\.(scss|sass)$/;
 
 module.exports = function(webpackEnv) {
-    const isEnvDevelopment = webpackEnv.NODE_ENV === 'development';
-    const isEnvProduction = webpackEnv.NODE_ENV === 'production';
+    // const isEnvDevelopment = webpackEnv.NODE_ENV === 'development';
+    // const isEnvProduction = webpackEnv.NODE_ENV === 'production';
+    const isEnvDevelopment = true;
+    const isEnvProduction = false;
+
+    // console.log('webpackEnv', webpackEnv)
+    // console.log('webpackEnv.NODE_ENV', webpackEnv.NODE_ENV)
 
     return {
         entry: paths.appIndexJs,
@@ -21,15 +28,59 @@ module.exports = function(webpackEnv) {
         module: {
             rules: [
                 {
-                    test: /\.(js|jsx)$/,
-                    exclude: /node_modules/,
-                    use: {
-                        loader: 'babel-loader',
-                        options: { 
-                            presets: ['@babel/env'] 
-                        }
-                    }
-                },
+                    test: /\.(js|mjs|jsx|ts|tsx)$/,
+                    include: paths.appSrc,
+                    loader: require.resolve('babel-loader'),
+                    options: {
+                      customize: require.resolve(
+                        'babel-preset-react-app/webpack-overrides'
+                      ),
+                      
+                      plugins: [
+                        [
+                          require.resolve('babel-plugin-named-asset-import'),
+                          {
+                            loaderMap: {
+                              svg: {
+                                ReactComponent:
+                                  '@svgr/webpack?-svgo,+titleProp,+ref![path]',
+                              },
+                            },
+                          },
+                        ],
+                      ],
+                      cacheDirectory: true,
+                      cacheCompression: false,
+                      compact: isEnvProduction,
+                    },
+                    },
+                    // Process any JS outside of the app with Babel.
+                    // Unlike the application JS, we only compile the standard ES features.
+                    {
+                        test: /\.(js|mjs)$/,
+                        exclude: /@babel(?:\/|\\{1,2})runtime/,
+                        loader: require.resolve('babel-loader'),
+                        options: {
+                        babelrc: false,
+                        configFile: false,
+                        compact: false,
+                        presets: [
+                            [
+                            require.resolve('babel-preset-react-app/dependencies'),
+                            { helpers: true },
+                            ],
+                        ],
+                        cacheDirectory: true,
+                        // See #6846 for context on why cacheCompression is disabled
+                        cacheCompression: false,
+                        
+                        // Babel sourcemaps are needed for debugging into node_modules
+                        // code.  Without the options below, debuggers like VSCode
+                        // show incorrect code and set breakpoints on the wrong lines.
+                        sourceMaps: shouldUseSourceMap,
+                        inputSourceMap: shouldUseSourceMap,
+                        },
+                    },
                 {
                     test: cssRegex,
                     use: [isEnvProduction ? MiniCssExtractPlugin.loader : 'style-loader', 'css-loader']
@@ -85,7 +136,8 @@ module.exports = function(webpackEnv) {
         },
         devtool: isEnvDevelopment ? 'source-map' : false,
         devServer: {
-            contentBase: paths.appBuild
+            contentBase: paths.appBuild,
+            hot: true,
         }
     }
 }
