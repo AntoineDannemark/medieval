@@ -2,7 +2,7 @@
   "name": "medieval",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "homepage": ".",
   "private": true,
   "scripts": {
     "start": "webpack serve --config config/webpack.config.js --env NODE_ENV=development",
@@ -21,6 +21,7 @@
     "css-loader": "^5.0.2",
     "html-webpack-plugin": "^5.1.0",
     "mini-css-extract-plugin": "^1.3.7",
+    "pnp-webpack-plugin": "^1.6.4",
     "style-loader": "^2.0.0",
     "webpack": "^5.22.0",
     "webpack-cli": "^4.5.0",
