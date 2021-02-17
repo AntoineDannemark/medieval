@@ -1,15 +1,22 @@
 const path = require('path');
 const webpack = require('webpack');
 const paths = require('./paths');
+const PnpWebpackPlugin = require('pnp-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 
-module.exports = (env) => {
-    const isEnvDevelopment = env.NODE_ENV === 'development';
-    const isEnvProduction = env.NODE_ENV === 'production';
+// style files regexes
+const cssRegex = /\.css$/;
+const cssModuleRegex = /\.module\.css$/;
+const sassRegex = /\.(scss|sass)$/;
+const sassModuleRegex = /\.module\.(scss|sass)$/;
+
+module.exports = function(webpackEnv) {
+    const isEnvDevelopment = webpackEnv.NODE_ENV === 'development';
+    const isEnvProduction = webpackEnv.NODE_ENV === 'production';
 
     return {
-        entry: paths.appSrc + '/index.js',
+        entry: paths.appIndexJs,
         mode: isEnvProduction ? 'production' : isEnvDevelopment && 'development',
         module: {
             rules: [
@@ -24,7 +31,7 @@ module.exports = (env) => {
                     }
                 },
                 {
-                    test: /\.css$/,
+                    test: cssRegex,
                     use: [isEnvProduction ? MiniCssExtractPlugin.loader : 'style-loader', 'css-loader']
                 }
             ]
@@ -57,7 +64,18 @@ module.exports = (env) => {
                     filename: 'static/css/[name].[contenthash:8].css',
                     chunkFilename: 'static/css/[name].[contenthash:8].chunk.css',
                 }) : []),        
-        resolve: { extensions: ['*', '.js', '.jsx'] },
+        resolve: { 
+            // TODO consider adding fallback as in CRA ?
+            modules: ['node_modules', paths.appNodeModules],
+            extensions: paths.moduleFileExtensions
+                .map(ext => `.${ext}`),
+            plugins: [PnpWebpackPlugin],
+        },
+        resolveLoader: {
+            plugins: [
+                PnpWebpackPlugin.moduleLoader(module),
+            ],
+        },
         output: {
             filename: isEnvProduction 
                 ? 'static/js/[name].[contenthash:8].js' 
