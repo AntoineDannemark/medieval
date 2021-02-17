@@ -20,26 +20,13 @@ const moduleFileExtensions = [
     'jsx',
 ];
 
-// Resolve file paths in the same order as webpack
-const resolveModule = (resolveFn, filePath) => {
-    const extension = moduleFileExtensions.find(extension =>
-      fs.existsSync(resolveFn(`${filePath}.${extension}`))
-    );
-  
-    if (extension) {
-      return resolveFn(`${filePath}.${extension}`);
-    }
-  
-    return resolveFn(`${filePath}.js`);
-};
-
 module.exports = {
     appRoot: resolveApp('.'),
     appSrc: resolveApp('src'), 
     appBuild: resolveApp('build'),
     appPublic: resolveApp('public'),
     appHtml: resolveApp('public/index.html'),
-    appIndexJs: resolveModule(resolveApp, 'src/index'),
+    appIndexJs: resolveApp('src/index.ts'),
     appPackageJson: resolveApp('package.json'),
     appTsConfig: resolveApp('tsconfig.json'),
     appNodeModules: resolveApp('node_modules'),
