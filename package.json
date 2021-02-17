@@ -3,13 +3,28 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "private": true,
   "scripts": {
+    "start": "webpack serve --config config/webpack.config.js --env NODE_ENV=development",
+    "build-dev": "webpack --config config/webpack.config.js --env NODE_ENV=development",
+    "build": "webpack --config config/webpack.config.js --env NODE_ENV=production",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "antoine dannemark",
   "license": "ISC",
   "devDependencies": {
+    "@babel/cli": "^7.12.16",
+    "@babel/core": "^7.12.16",
+    "@babel/preset-env": "^7.12.16",
+    "@babel/preset-react": "^7.12.13",
+    "babel-loader": "^8.2.2",
+    "css-loader": "^5.0.2",
+    "style-loader": "^2.0.0",
     "webpack": "^5.22.0",
-    "webpack-cli": "^4.5.0"
+    "webpack-cli": "^4.5.0",
+    "webpack-dev-server": "^3.11.2"
+  },
+  "babel": {
+    "extends": "./config/babel.config.js"
   }
 }
